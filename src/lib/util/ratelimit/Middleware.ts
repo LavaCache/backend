@@ -8,7 +8,7 @@ import Cache from "lru-cache";
 import { now } from "microtime";
 
 import { Config, GliderKeys, VisitorAttrs } from "./Interfaces";
-import { iptoHex, isExist, micro_to_mili } from "../Util";
+import { ipToHex, exists, micro_to_milli } from "../Util";
 
 const logger = Logger.get(ratelimiter);
 
@@ -48,7 +48,7 @@ export async function ratelimiter(opts: Config) {
       else {
         const [ key, exp ] = result[0][1];
         const expParse: number = parseInt(exp, 10);
-        bannedKeys.set(key, expParse, micro_to_mili(expParse));
+        bannedKeys.set(key, expParse, micro_to_milli(expParse));
       }
     });
 
@@ -81,7 +81,7 @@ export async function ratelimiter(opts: Config) {
     switch (channel) {
       case `${opts.partitionKey}-ban`: {
         if (!bannedKeys.has(key) || bannedKeys.get(key) !== expAsInt) {
-          bannedKeys.set(key, expAsInt, micro_to_mili(expAsInt));
+          bannedKeys.set(key, expAsInt, micro_to_milli(expAsInt));
           localCache.del(key);
         }
 
@@ -97,7 +97,7 @@ export async function ratelimiter(opts: Config) {
               remaining: opts.ratelimit! - 1,
               uat: expAsInt,
             },
-            micro_to_mili(expAsInt)
+            micro_to_milli(expAsInt)
           );
         }
 
@@ -114,7 +114,7 @@ export async function ratelimiter(opts: Config) {
         .then((res) => {
           res.forEach((result: any, index: number) => {
             const cacheUpdateTmp = localCache.get(queryTmp[index]);
-            if (isExist(cacheUpdateTmp)) {
+            if (exists(cacheUpdateTmp)) {
               localCache.set(
                 queryTmp[index],
                 {
@@ -122,7 +122,7 @@ export async function ratelimiter(opts: Config) {
                   remaining: parseInt(result, 10),
                   uat: currentTime,
                 },
-                micro_to_mili(cacheUpdateTmp!.exp)
+                micro_to_milli(cacheUpdateTmp!.exp)
               );
             }
           });
@@ -145,7 +145,7 @@ export async function ratelimiter(opts: Config) {
   return async (ctx: Context, next: () => Promise<any>) => {
     // Fetching Current Sessions
     const currentTime: number = now();
-    const userKey: string = iptoHex(ctx.ip);
+    const userKey: string = ipToHex(ctx.ip);
     const cacheReg: VisitorAttrs | undefined = localCache.get(userKey);
     const bannedReg: number | undefined = bannedKeys.get(userKey);
 
@@ -196,7 +196,7 @@ export async function ratelimiter(opts: Config) {
           .exec((err, res) => {
             if (err) logger.error(err);
             else {
-              if (isExist(res[0][1][0])) {
+              if (exists(res[0][1][0])) {
                 const remoteRemains = parseInt(res[0][1][1], 10);
                 const remoteExp = parseInt(res[0][1][0], 10);
 
@@ -214,15 +214,15 @@ export async function ratelimiter(opts: Config) {
     }
     if (!ratelimited) {
       // Update the localCache Value
-      localCache.set(userKey, currentReg, micro_to_mili(currentReg.exp));
+      localCache.set(userKey, currentReg, micro_to_milli(currentReg.exp));
     } else {
-      bannedKeys.set(userKey, currentReg.exp, micro_to_mili(currentReg.exp));
+      bannedKeys.set(userKey, currentReg.exp, micro_to_milli(currentReg.exp));
       localCache.del(userKey);
     }
 
     ctx.set({
       "X-RateLimit-Remaining": currentReg.remaining.toString(),
-      "X-RateLimit-Reset": micro_to_mili(currentReg.exp).toString(),
+      "X-RateLimit-Reset": micro_to_milli(currentReg.exp).toString(),
     });
 
     ratelimited

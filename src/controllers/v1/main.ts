@@ -10,4 +10,9 @@ export class v1Main extends Controller {
       message: "Welcome to version 1 of the lavacache api."
     }
   }
+
+  @Route("/@me", { method: Method.GET })
+  public getMe(ctx: Context) {
+
+  }
 }

@@ -12,6 +12,7 @@ import { ratelimiter } from "../../util";
 import LavaCache from "../../LavaCache";
 import Controller from "./controller/Controller";
 import { getController } from "./controller/Decorator";
+import { User, UserType } from "../../util/UserManager";
 
 export class REST implements Plugin {
   public readonly logger: Logger;
@@ -74,6 +75,14 @@ export class REST implements Plugin {
    * @since 1.0.0
    */
   public async onLoad(api?: PluginAPI) {
+    this.server.use(async (ctx, next) => {
+      const header = ctx.headers.authorization;
+      if (!header) ctx.user = { ...freeUser }
+      else {
+
+      }
+    });
+
     this.useMiddleware([
       await ratelimiter({ db: this.lc.redis.redis }),
       cors(),
@@ -85,14 +94,14 @@ export class REST implements Plugin {
           }
         }
       }),
-      helmet(),
+      helmet()
     ]);
 
     this.server.use((ctx, next) => {
       this.router
         ? this.router.middleware()(ctx as any, next)
         : ctx.status = 503;
-    });
+    })
 
     this.server.listen(this.port, () => {
       this.logger.info(`Ready! Serving on 0.0.0.0:${this.port}`);
@@ -133,4 +142,10 @@ export class REST implements Plugin {
     main.use(versioned.routes());
     this.router = main;
   }
+}
+
+const freeUser: Omit<User, "password"> = {
+  type: UserType.FREE,
+  user: "freeUser",
+  ips: []
 }

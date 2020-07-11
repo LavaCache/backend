@@ -1,5 +1,6 @@
 import { ControllerData, Method } from "./Interfaces";
 import Controller from "./Controller";
+import { randomBytes } from "crypto";
 
 const CONTROLLER = Symbol("Controller");
 
@@ -48,3 +49,7 @@ export function Route(path: string, { method }: { method: Method }): MethodDecor
     }
   }
 }
+
+export const Use: MethodDecorator = Route(randomBytes(5).toString(), {
+  method: Method.USE
+});

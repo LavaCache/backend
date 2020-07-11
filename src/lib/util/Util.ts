@@ -3,7 +3,7 @@
  * note: length of redis key might affect connection latency to redis,
  *       using hex as key might save 33% of data size
  */
-export function iptoHex(IP: string): string {
+export function ipToHex(IP: string): string {
   const ipHex: string = IP.split('.')
     .reduce((accumulator: number, current: string) => {
       const currentVal: number = parseInt(current, 10);
@@ -19,10 +19,28 @@ export function iptoHex(IP: string): string {
 /***
  * Transform datatype
  */
-export function micro_to_mili(microNumber: number): number {
+export function micro_to_milli(microNumber: number): number {
   return Math.floor(microNumber / 1000000);
 }
 
-export function isExist(data: any): boolean {
+/**
+ * Whether a value exists or not.
+ * @param data The value to check.
+ * @since 1.0.0
+ */
+export function exists(data: any): boolean {
   return typeof data !== 'undefined' && data !== null;
+}
+
+/**
+ * Pluck specific values from an object.
+ * @param obj The object to pluck values from.
+ * @param keys The value keys to pluck.
+ * @param newObj Whether to create a new object.
+ * @since 1.0.0
+ */
+export function pluck<T extends Object, K extends keyof T>(obj: T, keys: K[], newObj: boolean = true): Omit<T, K> {
+  let o = newObj ? { ...obj } : obj;
+  for (const key of keys) delete o[key];
+  return o;
 }

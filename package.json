@@ -17,6 +17,7 @@
     "@koa/cors": "^3.1.0",
     "@koa/router": "^9.3.1",
     "@sentry/node": "^5.19.1",
+    "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
     "ioredis": "^4.17.3",
     "koa": "^2.13.0",
@@ -25,9 +26,12 @@
     "koa-morgan": "^1.0.1",
     "lru-cache": "^6.0.0",
     "microtime": "^3.0.0",
+    "monk": "^7.3.0",
+    "uuid": "^8.2.0",
     "yup": "^0.29.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/ioredis": "^4.17.2",
     "@types/koa": "^2.11.3",
     "@types/koa-helmet": "^5.2.0",
@@ -37,6 +41,7 @@
     "@types/lru-cache": "^5.1.0",
     "@types/microtime": "^2.1.0",
     "@types/node": "^14.0.22",
+    "@types/uuid": "^8.0.0",
     "@types/yup": "^0.29.3",
     "typescript": "^3.9.6"
   }

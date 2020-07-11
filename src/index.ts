@@ -11,3 +11,4 @@ const logger = Logger.get();
 })().catch((e) => {
   logger.error(e);
 });
+

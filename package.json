@@ -1,0 +1,43 @@
+{
+  "name": "@lavacache/backend",
+  "version": "1.0.0",
+  "description": "The backend for the lavacache service.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/lavacache/backend",
+  "author": "LavaCache Team",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node .",
+    "prestart": "rm -rf dist && tsc"
+  },
+  "dependencies": {
+    "@ayanaware/bento": "^1.0.0-beta.9",
+    "@ayanaware/logger": "^2.2.1",
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^9.3.1",
+    "@sentry/node": "^5.19.1",
+    "dotenv": "^8.2.0",
+    "ioredis": "^4.17.3",
+    "koa": "^2.13.0",
+    "koa-body": "^4.2.0",
+    "koa-helmet": "^5.2.0",
+    "koa-morgan": "^1.0.1",
+    "lru-cache": "^6.0.0",
+    "microtime": "^3.0.0",
+    "yup": "^0.29.1"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^4.17.2",
+    "@types/koa": "^2.11.3",
+    "@types/koa-helmet": "^5.2.0",
+    "@types/koa-morgan": "^1.0.4",
+    "@types/koa__cors": "^3.0.1",
+    "@types/koa__router": "^8.0.2",
+    "@types/lru-cache": "^5.1.0",
+    "@types/microtime": "^2.1.0",
+    "@types/node": "^14.0.22",
+    "@types/yup": "^0.29.3",
+    "typescript": "^3.9.6"
+  }
+}
